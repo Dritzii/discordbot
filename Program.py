@@ -2,10 +2,9 @@ import discord
 import configparser
 import os
 
+from jokes import *
 
-from jokes import Jokes as jk
-
-joke = jk()
+joke = Jokes()
 
 config = configparser.ConfigParser()
 absolute =  os.path.dirname(os.path.abspath(__file__)) + "/config.ini"
@@ -31,23 +30,25 @@ class MyClient(discord.Client):
     async def on_message(self, message):
         for guild in client.guilds:
             if message.content == "!chuckjoke":
-                joke = joke().get_random_joke()
-                await message.channel.send(f'Random Joke: {joke}')
+                jokes = joke.get_random_joke()
+                await message.channel.send(f'Random Joke: {jokes}')
             if message.content == "!users":
                 await message.channel.send(f'# of Members: {guild.member_count}')
             if message.content == "!members":
                 members = '\n - '.join([member.name for member in guild.members])
                 await message.channel.send(f'Guild Members:\n - {members}')
+            if message.content == "!peter":
+                await message.channel.send('You are a dickhead <@Peter23>')
             if message.content == "!guildid":
                 await message.channel.send(f'Guild id is {guild.id}')
             if message.content == "!help":
                 await message.channel.send(f'There are several options avaliable:\n !guildid \n !members \n !users \n !hello')
             if message.content == "!shutdown":
+                await message.channel.send('I am shutting down now, run the Python application if you want me back up')
                 await client.close()
 
 
 
 client = MyClient()
 client.run(discord_details['token'])
-
 
